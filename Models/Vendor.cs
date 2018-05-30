@@ -19,12 +19,17 @@ namespace Models
             get { return inventory; }
         }
 
-        public void Deposit(CoinType type)
+        /// <summary>
+        /// Deposits a coin into the vending machine
+        /// </summary>
+        /// <param name="coin">Accepts various coinages of types: Penny, Nickel, Dime, Quaryer</param>
+        public void Deposit(Coin coin)
         {
-            Console.WriteLine($"Deposited a {type}");
-            deposits.Add(new Coin(type));
+            Console.WriteLine($"Deposited a {coin}");
+            deposits.Add(coin);
         }
 
+        //Lists the current inventory of the shop
         public void ListInventory()
         {
             foreach (var item in inventory.Items)
@@ -33,6 +38,9 @@ namespace Models
             }
         }
 
+        /// <summary>
+        /// Returns all inserted Coins to the user
+        /// </summary>
         public void Refund()
         {
             if (deposits.Count > 0)
@@ -43,57 +51,71 @@ namespace Models
                 }
 
                 deposits.Clear();
-            } else
+            }
+            else
             {
                 Console.WriteLine("You didnt have anything to refund");
             }
 
         }
 
+        /// <summary>
+        /// Gets the total value of all coins inserted into the vending machine
+        /// </summary>
+        /// <returns></returns>
         public int GetDepositedAmount()
         {
             int amount = 0;
 
-            foreach (var item in deposits)
+            foreach (var coin in deposits)
             {
-                amount += item.GetValue();
+                amount += coin.Value;
             }
 
             return amount;
         }
 
+        /// <summary>
+        /// Buys an item from the vending machine and tells user whether it succeeded or not
+        /// </summary>
+        /// <param name="itemName">Item name must exist in the list of items</param>
         public void BuyItem(string itemName)
         {
             VendorItem item = inventory.Items.Find(x => x.Name == itemName);
-            int depositedAmount = GetDepositedAmount();
-
-            if (item.Value <= depositedAmount)
+            if (item != null)
             {
-                Console.WriteLine($"You bought a {item} for {item.Value}");
+                int depositedAmount = GetDepositedAmount();
 
-                int changeAmount = depositedAmount - item.Value;
-
-                if (changeAmount > 0)
+                if (item.Value <= depositedAmount)
                 {
-                    Console.WriteLine("You recieve following coins as change, for a total of: " + changeAmount);
-                    var coinsInChange = GetChange(changeAmount);
-                    foreach (var coin in coinsInChange)
+                    Console.WriteLine($"You bought a {item} for {item.Value}");
+
+                    int changeAmount = depositedAmount - item.Value;
+
+                    if (changeAmount > 0)
                     {
-                        Console.WriteLine(coin);
+                        Console.WriteLine("You recieve following coins as change, for a total of: " + changeAmount + " Cent(s)");
+                        var coinsInChange = GetChange(changeAmount);
+                        foreach (var coin in coinsInChange)
+                        {
+                            Console.WriteLine(coin);
+                        }
                     }
+                    else
+                    {
+                        Console.WriteLine("You paid right on target!");
+                    }
+
+                    Console.WriteLine("Thank you for using our Vendor");
                 }
                 else
                 {
-                    Console.WriteLine("You paid right on target!");
+                    Console.WriteLine("Sorry, you didnt have enough money");
                 }
-
-                Console.WriteLine("Thank you for using our Vendor");
-            }
-            else
+            } else
             {
-                Console.WriteLine("Sorry, you didnt have enough money");
+                Console.WriteLine("Sorry, couldnt find your product");
             }
-
 
         }
 
@@ -105,22 +127,22 @@ namespace Models
             {
                 if (changeAmount >= 25)
                 {
-                    returnCoins.Add(new Coin(CoinType.Quarter));
+                    returnCoins.Add(new Quarter());
                     changeAmount -= 25;
                 }
                 else if (changeAmount >= 10)
                 {
-                    returnCoins.Add(new Coin(CoinType.Dime));
+                    returnCoins.Add(new Dime());
                     changeAmount -= 10;
                 }
                 else if (changeAmount >= 5)
                 {
-                    returnCoins.Add(new Coin(CoinType.Nickel));
+                    returnCoins.Add(new Nickel());
                     changeAmount -= 5;
                 }
                 else if (changeAmount >= 1)
                 {
-                    returnCoins.Add(new Coin(CoinType.Penny));
+                    returnCoins.Add(new Penny());
                     changeAmount -= 1;
                 }
             }

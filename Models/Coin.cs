@@ -2,49 +2,53 @@
 
 namespace Models
 {
-    public enum CoinType
+    /*
+     * The coin class is inherited to various sub-types, 
+     * to distinguish the different coinages easily
+     */
+    public abstract class Coin
     {
-        Penny,
-        Nickel, 
-        Dime,
-        Quarter
-    }
-    public class Coin
-    {
-        private CoinType type;
-
-        public Coin(CoinType type)
-        {
-            this.type = type;
+        private readonly int value;
+        public Coin(int value){
+            this.value = value;
         }
-
-        public int GetValue()
+        public int Value
         {
-            int returnVal = 0;
-            switch (type)
-            {
-                case CoinType.Penny:
-                    returnVal = 1;
-                    break;
-                case CoinType.Nickel:
-                    returnVal = 5;
-                    break;
-                case CoinType.Dime:
-                    returnVal = 10;
-                    break;
-                case CoinType.Quarter:
-                    returnVal = 25;
-                    break;
-                default:
-                    break;
-            }
-
-            return returnVal;
+            get { return value; }
         }
 
         public override string ToString()
         {
-            return type.ToString();
+            return this.GetType().Name;
+        }
+    }
+
+    public class Penny : Coin
+    {
+        public Penny(int value = 1) : base(value)
+        {            
+        }
+
+    }
+
+    public class Nickel : Coin
+    {
+        public Nickel(int value = 5) : base(value)
+        {
+        }
+    }
+
+    public class Dime : Coin
+    {
+        public Dime(int value = 10) : base(value)
+        {
+        }
+    }
+
+    public class Quarter : Coin
+    {
+        public Quarter(int value = 25) : base(value)
+        {
         }
     }
 }

@@ -14,7 +14,7 @@ namespace VendingMachine
             var kernel = DIVendor.GetKernel();
             
             //You can swap this with another inventorytype, ie DrinkInventory
-            vendor = new Vendor(kernel.Get<FoodInventory>());
+            vendor = new Vendor(kernel.Get<DrinkInventory>());
 
             Console.WriteLine("Velcome to our vending stand, please pick a menu item: ");
             while (true)
@@ -71,16 +71,16 @@ namespace VendingMachine
                 switch (info.Key)
                 {
                     case ConsoleKey.P:
-                        vendor.Deposit(CoinType.Penny);
+                        vendor.Deposit(new Penny());
                         break;
                     case ConsoleKey.N:
-                        vendor.Deposit(CoinType.Nickel);
+                        vendor.Deposit(new Nickel());
                         break;
                     case ConsoleKey.D:
-                        vendor.Deposit(CoinType.Dime);
+                        vendor.Deposit(new Dime());
                         break;
                     case ConsoleKey.Q:
-                        vendor.Deposit(CoinType.Quarter);
+                        vendor.Deposit(new Quarter());
                         break;
                     case ConsoleKey.E:
                         depositing = false;
